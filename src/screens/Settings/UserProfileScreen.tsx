@@ -3,13 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, Divider } from "react-native-paper";
 import { AuthContext } from "../../context/Context";
+import { openGallery } from "../../helper/MobileAccess";
+import { _controlGallCam } from "../../helper/Permisos";
 
-export const UserProfileScreen = () => {
+export const UserProfileScreen = ({ navigation }: any) => {
     const [photo, setPhoto] = useState('');
     const { context } = useContext(AuthContext);
 
     useEffect(() => {
-
     }, [])
 
 
@@ -17,7 +18,12 @@ export const UserProfileScreen = () => {
         <View style={{ margin: 20 }}>
             <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <Avatar.Image source={(context.user?.photoURL === '') ? require('../../assets/avatarDefault.png') : { uri: context.user?.photoURL }} style={{ backgroundColor: 'white' }} />
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        _controlGallCam({ navigation });
+                        openGallery({ setPhoto });
+                    }}
+                >
                     <Text style={{ fontSize: 14, fontWeight: 'bold', marginTop: 5 }}>Cambiar imagen de perfil</Text>
                 </TouchableOpacity>
             </View>

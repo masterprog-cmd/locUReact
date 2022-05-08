@@ -3,7 +3,7 @@ import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from 'react-nat
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { AuthContext } from '../../context/Context';
 
-import { location } from '../../helper/Location';
+import { location } from '../../helper/MobileAccess';
 import { mapStyle } from '../../helper/mapStyle';
 
 export const HomeScreen = () => {

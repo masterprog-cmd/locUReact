@@ -97,7 +97,7 @@ export const loginAccessControl = async ({ correo, pwd }: Props, { setContext }:
 }
 
 //Controlamos el acceso a la aplicación mediante el login con Google.
-//HAcemos una llamada al login y devolvemos el resultado (User or null);
+//Hacemos una llamada al login y devolvemos el resultado (User or null);
 export const GoogleAccessControl = async () => {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     return googleSignIn();
