@@ -61,18 +61,20 @@ export const googleIsSignedIn = async () => {
     return isSigned;
 }
 
+//Llamada a la API para cambiar la foto de perfil
 export const updatePhoto = async (photo: string) => {
-    let messaje;
-    await auth().currentUser?.updateProfile({
+    const update = {
         photoURL: photo
-    })
-        .then(() => {
-            messaje = true;
-        })
-        .catch(() => {
-            messaje = false;
-        })
-    return messaje;
+    }
+    await auth().currentUser?.updateProfile(update);
+}
+
+//Llamada a la API para eliminar la foto de perfil
+export const deletePhoto = async () => {
+    const update = {
+        photoURL: null
+    }
+    await auth().currentUser.updateProfile(update);
 }
 
 //Llamada a la API para cerrar sesión de Google

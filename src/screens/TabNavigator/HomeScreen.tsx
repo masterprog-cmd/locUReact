@@ -5,6 +5,7 @@ import { AuthContext } from '../../context/Context';
 
 import { location } from '../../helper/MobileAccess';
 import { mapStyle } from '../../helper/mapStyle';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export const HomeScreen = () => {
     //Inicializamos latitude y longitude a 0 por si hay un fallo que nos muestre donde sea.
@@ -33,6 +34,26 @@ export const HomeScreen = () => {
         datos, cargamos el mapa con nuestra localización */}
             {latitude !== 0 && longitude !== 0 ?
                 <View style={styles.container}>
+                    <View style={{ height: 50 }}>
+                        <GooglePlacesAutocomplete
+                            placeholder='Search'
+                            minLength={2} // minimum length of text to search
+                            fetchDetails={true}
+                            enableHighAccuracyLocation={true}
+                            onPress={(data, details = null) => {
+                                // 'details' is provided when fetchDetails = true
+                                console.log(data, details);
+                            }}
+                            styles={{
+                                textInput: { height: 50, backgroundColor: '#eee', marginVertical: 5 }
+                            }}
+                            keyboardShouldPersistTaps="always"
+                            query={{
+                                key: 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw',
+                                language: 'es',
+                            }}
+                        />
+                    </View>
                     <MapView
                         customMapStyle={mapStyle}
                         showsUserLocation={true}
@@ -71,13 +92,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
+        // backgroundColor: 'black',
+        // alignItems: 'center',
+        // justifyContent: 'center',
     },
     mapStyle: {
         width: Dimensions.get('window').width,
-        height: 670,
+        height: Dimensions.get('window').height,
     },
 });
 
