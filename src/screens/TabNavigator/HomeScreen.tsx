@@ -7,8 +7,9 @@ import { location } from '../../helper/MobileAccess';
 import { mapStyle } from '../../helper/mapStyle';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from 'react-native-maps-directions';
+import { _controlLocation } from '../../helper/Permisos';
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }: any) => {
     //Inicializamos latitude y longitude a 0 por si hay un fallo que nos muestre donde sea.
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
@@ -19,6 +20,8 @@ export const HomeScreen = () => {
     const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
 
     useEffect(() => {
+        //Preguntamos si tenemos permisos para obtener la localización
+        _controlLocation({ navigation });
         //Obtenemos la localización del usuario y la añadimos a los useState (arriba declarados) para mostrarla en el mapa
         location()
             .then(res => {
@@ -79,11 +82,11 @@ export const HomeScreen = () => {
                         showsCompass={true}
 
                     >
-                        {/* <MapViewDirections
+                        <MapViewDirections
                             origin={origin}
                             destination={destination}
                             apikey={GOOGLE_MAPS_APIKEY}
-                        /> */}
+                        />
                     </MapView>
                 </View>
                 :
