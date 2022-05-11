@@ -64,6 +64,11 @@ export const deletePhoto = async () => {
     await auth().currentUser.updateProfile(update);
 }
 
+//Lamada a la API para eliminar el usuario
+export const deleteUser = async () => {
+    await auth().currentUser?.delete();
+}
+
 //Llamada a la API para cerrar sesión de Google
 export const logoutGoogle = async () => {
     let messaje;
@@ -84,6 +89,7 @@ export const logoutUser = async () => {
     let messaje;
     await auth().signOut()
         .then((res) => {
+            logoutGoogle();
             messaje = res;
         })
         .catch(() => {

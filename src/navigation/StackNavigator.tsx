@@ -7,6 +7,7 @@ import { RegistroScreen } from '../screens/access/RegistroScreen';
 import { TabNavigator } from './TabNavigator';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { UserProfileScreen } from '../screens/Settings/UserProfileScreen';
+import { DeleteUser } from '../screens/Settings/DeleteUser';
 
 
 const Stack = createStackNavigator();
@@ -26,6 +27,7 @@ export const StackNavigator = () => {
       <Stack.Screen name="Tab navigator" component={TabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: true }} />
       <Stack.Screen name="UserProfile" component={UserProfileScreen} options={{ headerShown: true, title: 'Datos del usuario' }} />
+      <Stack.Screen name="Change Password" component={DeleteUser} options={{ headerShown: true, title: 'Eliminar cuenta' }} />
     </Stack.Navigator>
   )
 }

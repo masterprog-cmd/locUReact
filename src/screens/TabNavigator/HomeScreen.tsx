@@ -79,11 +79,11 @@ export const HomeScreen = () => {
                         showsCompass={true}
 
                     >
-                        <MapViewDirections
+                        {/* <MapViewDirections
                             origin={origin}
                             destination={destination}
                             apikey={GOOGLE_MAPS_APIKEY}
-                        />
+                        /> */}
                     </MapView>
                 </View>
                 :
