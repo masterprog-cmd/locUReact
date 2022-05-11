@@ -37,7 +37,7 @@ export const RegistrosAccessControl = async (props: Props, { navigation }: any) 
                         duration: Snackbar.LENGTH_LONG,
                         backgroundColor: 'red'
                     });
-                } else {
+                } else if (res !== null) {
                     auth().currentUser?.updateProfile({
                         displayName: `${props.name} ${props.lastName}`,
                     })
@@ -93,7 +93,6 @@ export const loginAccessControl = async ({ correo, pwd }: Props, { setContext }:
                 console.error(err);
             })
     }
-
 }
 
 //Controlamos el acceso a la aplicación mediante el login con Google.

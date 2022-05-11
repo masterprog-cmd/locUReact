@@ -24,8 +24,10 @@ export const RegistroScreen = ({ navigation }: any) => {
             </View>
             <View style={{ top: 10, alignItems: 'center' }}>
                 <TextInput placeholder='Nombre' value={name} style={styles.textInputStyles} textAlign='center' onChangeText={(value) => setName(value)} />
-                <TextInput placeholder='Apellidos' value={lastName} style={styles.textInputStyles} textAlign='center' onChangeText={(value) => setLastName(value)} />
-                <TextInput placeholder='Correo electrónico' value={correo} style={styles.textInputStyles} textAlign='center' onChangeText={(value) => setCorreo(value)} />
+                <TextInput placeholder='Apellidos' value={lastName} style={styles.textInputStyles} textAlign='center'
+                    onChangeText={(value) => setLastName(value)} />
+                <TextInput placeholder='Correo electrónico' value={correo} style={styles.textInputStyles} textAlign='center'
+                    onChangeText={(value) => setCorreo(value)} />
                 <View style={{ marginLeft: 20 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <TextInput placeholder='Contraseña' value={pwd} style={styles.textInputStyles}

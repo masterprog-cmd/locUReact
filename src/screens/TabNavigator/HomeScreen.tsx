@@ -6,6 +6,7 @@ import { AuthContext } from '../../context/Context';
 import { location } from '../../helper/MobileAccess';
 import { mapStyle } from '../../helper/mapStyle';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MapViewDirections from 'react-native-maps-directions';
 
 export const HomeScreen = () => {
     //Inicializamos latitude y longitude a 0 por si hay un fallo que nos muestre donde sea.
@@ -13,6 +14,9 @@ export const HomeScreen = () => {
     const [longitude, setLongitude] = useState(0);
     //Obtenemos el context para utilizar la información del usuario
     const { context } = useContext(AuthContext);
+    const origin = { latitude, longitude };
+    const destination = { latitude: 37.771707, longitude: -122.4053769 };
+    const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
 
     useEffect(() => {
         //Obtenemos la localización del usuario y la añadimos a los useState (arriba declarados) para mostrarla en el mapa
@@ -49,7 +53,7 @@ export const HomeScreen = () => {
                             }}
                             keyboardShouldPersistTaps="always"
                             query={{
-                                key: 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw',
+                                key: GOOGLE_MAPS_APIKEY,
                                 language: 'es',
                             }}
                         />
@@ -63,8 +67,8 @@ export const HomeScreen = () => {
                         focusable={true}
 
                         initialRegion={{
-                            latitude: latitude,
-                            longitude: longitude,
+                            latitude,
+                            longitude,
                             latitudeDelta: 0.00422,
                             longitudeDelta: 0.000121,
                         }}
@@ -75,6 +79,11 @@ export const HomeScreen = () => {
                         showsCompass={true}
 
                     >
+                        <MapViewDirections
+                            origin={origin}
+                            destination={destination}
+                            apikey={GOOGLE_MAPS_APIKEY}
+                        />
                     </MapView>
                 </View>
                 :

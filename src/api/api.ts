@@ -48,19 +48,6 @@ export const googleSignIn = async () => {
     return auth().signInWithCredential(token);
 }
 
-//Llamada a la API para que nos verifique que hemos iniciado sesión o no (return boolean)   	
-export const googleIsSignedIn = async () => {
-    let isSigned;
-    await GoogleSignin.isSignedIn()
-        .then(async (user) => {
-            isSigned = user;
-        })
-        .catch(() => {
-            isSigned = false;
-        })
-    return isSigned;
-}
-
 //Llamada a la API para cambiar la foto de perfil
 export const updatePhoto = async (photo: string) => {
     const update = {

@@ -1,4 +1,4 @@
-import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React, { useContext, useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
@@ -52,7 +52,8 @@ export const LoginScreen = ({ navigation }: any) => {
             <View style={{ alignItems: 'center' }}>
                 {/* TextInput del correo y de la contraseña en una caja */}
                 <View style={{ top: 30, left: 10, }}>
-                    <TextInput placeholder='Correo electrónico' value={email} onChangeText={(value) => { setEmail(value) }} style={{ borderRadius: 20, borderColor: 'black', borderWidth: 1, width: 280 }} textAlign='center' />
+                    <TextInput placeholder='Correo electrónico' value={email} onChangeText={(value) => { setEmail(value) }}
+                        style={{ borderRadius: 20, borderColor: 'black', borderWidth: 1, width: 280 }} textAlign='center' />
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <TextInput placeholder='Contraseña' value={password} secureTextEntry={secureText} onChangeText={(value) => { setPassword(value) }}
                             style={{ borderRadius: 20, borderColor: 'black', borderWidth: 1, width: 280, marginTop: 30 }} textAlign='center' />
