@@ -8,6 +8,7 @@ import { mapStyle } from '../../helper/mapStyle';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from 'react-native-maps-directions';
 import { _controlLocation } from '../../helper/Permisos';
+import { GOOGLE_MAPS_APIKEY } from '../../api/api';
 
 export const HomeScreen = ({ navigation }: any) => {
     //Inicializamos latitude y longitude a 0 por si hay un fallo que nos muestre donde sea.
@@ -16,8 +17,7 @@ export const HomeScreen = ({ navigation }: any) => {
     //Obtenemos el context para utilizar la información del usuario
     const { context } = useContext(AuthContext);
     const origin = { latitude, longitude };
-    const destination = { latitude: 37.771707, longitude: -122.4053769 };
-    const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
+    const destination = { latitude: 39.91345, longitude: -0.11470 };
 
     useEffect(() => {
         //Preguntamos si tenemos permisos para obtener la localización
@@ -41,23 +41,22 @@ export const HomeScreen = ({ navigation }: any) => {
         datos, cargamos el mapa con nuestra localización */}
             {latitude !== 0 && longitude !== 0 ?
                 <View style={styles.container}>
-                    <View style={{ height: 50 }}>
+                    <View>
                         <GooglePlacesAutocomplete
-                            placeholder='Search'
+                            placeholder='Buscar dirección'
                             minLength={2} // minimum length of text to search
                             fetchDetails={true}
                             enableHighAccuracyLocation={true}
-                            onPress={(data, details = null) => {
+                            onPress={(data, details) => {
                                 // 'details' is provided when fetchDetails = true
-                                console.log(data, details);
+                                // console.log(data);
+                                console.log(details.formatted_address);
+                                console.log(details.geometry.location);
                             }}
-                            styles={{
-                                textInput: { height: 50, backgroundColor: '#eee', marginVertical: 5 }
-                            }}
-                            keyboardShouldPersistTaps="always"
                             query={{
                                 key: GOOGLE_MAPS_APIKEY,
                                 language: 'es',
+                                types: '(cities)'
                             }}
                         />
                     </View>
@@ -83,6 +82,8 @@ export const HomeScreen = ({ navigation }: any) => {
 
                     >
                         <MapViewDirections
+                            strokeColor='black'
+                            strokeWidth={3}
                             origin={origin}
                             destination={destination}
                             apikey={GOOGLE_MAPS_APIKEY}
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+        position: 'absolute',
         // backgroundColor: 'black',
         // alignItems: 'center',
         // justifyContent: 'center',

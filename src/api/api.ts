@@ -1,5 +1,8 @@
+import React from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
+
+export const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
 
 //Llamada a la API para el inicio de sesión
 export const loginUser = async (correo: string, pwd: string) => {
@@ -95,5 +98,21 @@ export const logoutUser = async () => {
         .catch(() => {
             messaje = null;
         })
+    return messaje;
+}
+
+//Pasamos como parámetros localización, tipo, radio y key para obtener los locales cercanos a la ubicación del usuario
+export const getLocales = async (latitude: number, longitude: number, tipo: string, radio: number, key: string) => {
+    let messaje;
+    await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radio}&type=${tipo}&key=${key}`)
+        .then(res => res.json())
+        .then(res => {
+            messaje = res;
+        }
+        )
+        .catch(() => {
+            messaje = null;
+        }
+        )
     return messaje;
 }
