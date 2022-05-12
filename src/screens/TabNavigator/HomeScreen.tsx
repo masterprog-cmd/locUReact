@@ -1,23 +1,46 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from 'react-native'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { AuthContext } from '../../context/Context';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
+import { AuthContext } from '../../context/Context';
 import { location } from '../../helper/MobileAccess';
 import { mapStyle } from '../../helper/mapStyle';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MapViewDirections from 'react-native-maps-directions';
 import { _controlLocation } from '../../helper/Permisos';
-import { GOOGLE_MAPS_APIKEY } from '../../api/api';
+import { getPlaces, GOOGLE_MAPS_APIKEY } from '../../api/api';
+import { MyMarker } from '../../components/MyMarker';
 
 export const HomeScreen = ({ navigation }: any) => {
     //Inicializamos latitude y longitude a 0 por si hay un fallo que nos muestre donde sea.
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
+    //Guardamos los datos de la petición de 
+    const [places, setPlaces] = useState([]);
+    const [places1, setPlaces1] = useState([]);
+
     //Obtenemos el context para utilizar la información del usuario
     const { context } = useContext(AuthContext);
-    const origin = { latitude, longitude };
-    const destination = { latitude: 39.91345, longitude: -0.11470 };
+    // const origin = { latitude, longitude };
+    // const destination = { latitude: 39.91345, longitude: -0.11470 };
+
+    //Obtenemos todos los markers referentes a los restaurantes
+    const getRestaurantMarkers = (places.length > 0) ?
+        (places.map((place: any, key) => {
+            return (<MyMarker
+                key={key}
+                item={place}
+                color='red'
+            />)
+        })) : (null);
+
+    //Obtenemos todos los markers referentes a los clubs nocturnos
+    const getNightClubMarkers = (places1.length > 0) ? places1.map((place1: any, key) => {
+        return (<MyMarker
+            key={key}
+            item={place1}
+            color='green'
+        />)
+    }) : null
 
     useEffect(() => {
         //Preguntamos si tenemos permisos para obtener la localización
@@ -25,14 +48,33 @@ export const HomeScreen = ({ navigation }: any) => {
         //Obtenemos la localización del usuario y la añadimos a los useState (arriba declarados) para mostrarla en el mapa
         location()
             .then(res => {
-                setLatitude(res.latitude);
-                setLongitude(res.longitude);
+                const lat = res.latitude;
+                const lng = res.longitude;
+
+                setLatitude(lat);
+                setLongitude(lng);
+
+                getPlaces(lat, lng, 3500, 'restaurant', GOOGLE_MAPS_APIKEY)
+                    .then(res0 => {
+                        setPlaces(res0.results);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    }
+                    );
+                getPlaces(lat, lng, 3500, 'night_club', GOOGLE_MAPS_APIKEY)
+                    .then(res1 => {
+                        setPlaces1(res1.results);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    }
+                    );
             })
             .catch(err => {
                 console.error(err);
-            })
-    }, [])
-
+            });
+    }, []);
 
     return (
         <>
@@ -49,14 +91,14 @@ export const HomeScreen = ({ navigation }: any) => {
                             enableHighAccuracyLocation={true}
                             onPress={(data, details) => {
                                 // 'details' is provided when fetchDetails = true
-                                // console.log(data);
+                                console.log(data);
                                 console.log(details.formatted_address);
                                 console.log(details.geometry.location);
                             }}
                             query={{
                                 key: GOOGLE_MAPS_APIKEY,
                                 language: 'es',
-                                types: '(cities)'
+                                types: ['restaurant', 'bar', 'cafe', 'night_club']
                             }}
                         />
                     </View>
@@ -67,27 +109,28 @@ export const HomeScreen = ({ navigation }: any) => {
                         provider={PROVIDER_GOOGLE}
                         style={styles.mapStyle}
                         focusable={true}
-
                         initialRegion={{
                             latitude,
                             longitude,
-                            latitudeDelta: 0.00422,
-                            longitudeDelta: 0.000121,
+                            latitudeDelta: 0.0422,
+                            longitudeDelta: 0.0121,
                         }}
-                        mapType="standard"
+                        mapType="satellite"
                         userLocationPriority='high'
-                        userLocationUpdateInterval={5000}
+                        userLocationUpdateInterval={2000}
                         showsMyLocationButton={true}
                         showsCompass={true}
 
                     >
-                        <MapViewDirections
-                            strokeColor='black'
+                        {/* <MapViewDirections
+                            strokeColor='blue'
                             strokeWidth={3}
                             origin={origin}
                             destination={destination}
                             apikey={GOOGLE_MAPS_APIKEY}
-                        />
+                        /> */}
+                        {getRestaurantMarkers}
+                        {getNightClubMarkers}
                     </MapView>
                 </View>
                 :
@@ -115,4 +158,3 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height,
     },
 });
-
