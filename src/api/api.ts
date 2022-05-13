@@ -104,7 +104,7 @@ export const logoutUser = async () => {
 //Pasamos como parámetros localización, tipo, radio y key para obtener los locales cercanos a la ubicación del usuario
 export const getPlaces = async (latitude: number, longitude: number, radio: number, tipo: string, key: string) => {
     let messaje;
-    await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radio}&types=${tipo}&key=${key}`)
+    await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radio}&types=${[tipo]}&key=${key}`)
         .then(res => res.json())
         .then(res => {
             messaje = res;

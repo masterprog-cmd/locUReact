@@ -30,7 +30,7 @@ export const MyMarker = ({ item, color, setCoordenates }: Props) => {
 
             <View style={{}}>
                 <Text style={{}}>{item.name}</Text>
-                <Text style={{}}>{item.opening_hours ? 'YES' : 'NO'}</Text>
+                <Text style={{}}>Abierto: {item.opening_hours ? 'Si' : 'No'}</Text>
             </View>
         </Callout>
 

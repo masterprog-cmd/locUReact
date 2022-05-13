@@ -34,8 +34,9 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                     onPress={() => {
                                         setCoordenates({
                                             latitude: item.geometry.location.lat,
-                                            longitude: item.geometry.location.lng
-                                        })
+                                            longitude: item.geometry.location.lng,
+                                        });
+                                        setModalVisible(!modalVisible);
                                     }}
                                 />
                                 <FABButton
