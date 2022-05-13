@@ -1,8 +1,12 @@
+import { firebase } from "@react-native-firebase/firestore";
 import React from "react";
-import { View, Modal, TouchableOpacity, Text, Dimensions, StyleSheet, Platform, Linking, Alert } from "react-native";
+import { View, Modal, TouchableOpacity, Text, Dimensions, StyleSheet, Linking, Alert } from "react-native";
 import { Button } from "react-native-paper";
+import auth from '@react-native-firebase/auth';
+
 import { getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
 import { FABButton } from "../FABButton";
+
 
 interface Props {
     item: any,
@@ -51,12 +55,16 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                                     :
                                                     Alert.alert('No se encontró número telefónico');
                                             })
+                                        setModalVisible(!modalVisible);
                                     }}
                                 />
                                 <FABButton
                                     iconName={'heart'}
                                     text={'Guardar'}
-                                    onPress={() => { }}
+                                    onPress={() => {
+
+                                        setModalVisible(!modalVisible);
+                                    }}
                                 />
 
                             </View>

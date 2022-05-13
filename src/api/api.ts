@@ -1,6 +1,7 @@
 import React from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import { firebase } from '@react-native-firebase/firestore';
 
 export const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
 
@@ -147,4 +148,18 @@ export const getImagesPlaces = async (photo_reference: string, key: string) => {
         }
         )
     return messaje;
+}
+
+//Añadir datos del usuario a la base de datos
+export const addData = async (name: string, vicinity: string, lat: number, lng: number) => {
+
+    await firebase.firestore().collection('Users').add({
+        name: name,
+        address: vicinity,
+        latitude: lat,
+        longitude: lng,
+    })
+        .then((res) => {
+            return res;
+        })
 }

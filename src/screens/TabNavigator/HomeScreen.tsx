@@ -43,8 +43,8 @@ export const HomeScreen = ({ navigation }: any) => {
                 setLongitude(lng);
 
                 getPlaces(lat, lng, 3500, 'restaurant', GOOGLE_MAPS_APIKEY)
-                    .then(res0 => {
-                        setPlaces(res0.results);
+                    .then(resp => {
+                        setPlaces(resp.results);
 
                     })
                     .catch(err => {
@@ -52,8 +52,8 @@ export const HomeScreen = ({ navigation }: any) => {
                     }
                     );
                 getPlaces(lat, lng, 3500, 'night_club', GOOGLE_MAPS_APIKEY)
-                    .then(res1 => {
-                        setPlaces1(res1.results);
+                    .then(resp => {
+                        setPlaces1(resp.results);
                     })
                     .catch(err => {
                         console.error(err);
