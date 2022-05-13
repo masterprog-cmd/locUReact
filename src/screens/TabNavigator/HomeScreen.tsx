@@ -7,8 +7,9 @@ import { AuthContext } from '../../context/Context';
 import { location } from '../../helper/MobileAccess';
 import { mapStyle } from '../../helper/mapStyle';
 import { _controlLocation } from '../../helper/Permisos';
-import { getPlaces, GOOGLE_MAPS_APIKEY } from '../../api/api';
+import { getPhoneNumber, getPlaces, GOOGLE_MAPS_APIKEY } from '../../api/api';
 import { MyMarker } from '../../components/MyMarker';
+import MapViewDirections from 'react-native-maps-directions';
 
 export const HomeScreen = ({ navigation }: any) => {
     //Inicializamos latitude y longitude a 0 por si hay un fallo que nos muestre donde sea.
@@ -20,27 +21,14 @@ export const HomeScreen = ({ navigation }: any) => {
 
     //Obtenemos el context para utilizar la información del usuario
     const { context } = useContext(AuthContext);
-    // const origin = { latitude, longitude };
-    // const destination = { latitude: 39.91345, longitude: -0.11470 };
+    const origin = { latitude, longitude };
+    const [coordenates, setCoordenates] = useState({
+        latitude: null,
+        longitude: null
+    });
+    const destination = { latitude: coordenates.latitude, longitude: coordenates.longitude };
 
-    //Obtenemos todos los markers referentes a los restaurantes
-    const getRestaurantMarkers = (places.length > 0) ?
-        (places.map((place: any, key) => {
-            return (<MyMarker
-                key={key}
-                item={place}
-                color='red'
-            />)
-        })) : (null);
 
-    //Obtenemos todos los markers referentes a los clubs nocturnos
-    const getNightClubMarkers = (places1.length > 0) ? places1.map((place1: any, key) => {
-        return (<MyMarker
-            key={key}
-            item={place1}
-            color='green'
-        />)
-    }) : null
 
     useEffect(() => {
         //Preguntamos si tenemos permisos para obtener la localización
@@ -57,6 +45,7 @@ export const HomeScreen = ({ navigation }: any) => {
                 getPlaces(lat, lng, 3500, 'restaurant', GOOGLE_MAPS_APIKEY)
                     .then(res0 => {
                         setPlaces(res0.results);
+
                     })
                     .catch(err => {
                         console.error(err);
@@ -74,7 +63,28 @@ export const HomeScreen = ({ navigation }: any) => {
             .catch(err => {
                 console.error(err);
             });
-    }, []);
+    }, [coordenates]);
+
+    //Obtenemos todos los markers referentes a los restaurantes
+    const getRestaurantMarkers = (places.length > 0) ?
+        (places.map((place: any, key) => {
+            return (<MyMarker
+                key={key}
+                item={place}
+                color='red'
+                setCoordenates={setCoordenates}
+            />)
+        })) : (null);
+
+    //Obtenemos todos los markers referentes a los clubs nocturnos
+    const getNightClubMarkers = (places1.length > 0) ? places1.map((place1: any, key) => {
+        return (<MyMarker
+            key={key}
+            item={place1}
+            color='green'
+            setCoordenates={setCoordenates}
+        />)
+    }) : null
 
     return (
         <>
@@ -87,7 +97,14 @@ export const HomeScreen = ({ navigation }: any) => {
                         <GooglePlacesAutocomplete
                             placeholder='Buscar dirección'
                             minLength={2} // minimum length of text to search
+                            nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                            GooglePlacesSearchQuery={{
+                                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                                rankby: 'distance',
+                                types: 'restaurant',
+                            }}
                             fetchDetails={true}
+                            debounce={200}
                             enableHighAccuracyLocation={true}
                             onPress={(data, details) => {
                                 // 'details' is provided when fetchDetails = true
@@ -98,7 +115,7 @@ export const HomeScreen = ({ navigation }: any) => {
                             query={{
                                 key: GOOGLE_MAPS_APIKEY,
                                 language: 'es',
-                                types: ['restaurant', 'bar', 'cafe', 'night_club']
+                                types: ['restaurant']
                             }}
                         />
                     </View>
@@ -122,13 +139,18 @@ export const HomeScreen = ({ navigation }: any) => {
                         showsCompass={true}
 
                     >
-                        {/* <MapViewDirections
-                            strokeColor='blue'
-                            strokeWidth={3}
-                            origin={origin}
-                            destination={destination}
-                            apikey={GOOGLE_MAPS_APIKEY}
-                        /> */}
+                        {(coordenates.latitude !== null && coordenates.longitude !== null) ?
+
+                            <MapViewDirections
+                                strokeColor='blue'
+                                strokeWidth={3}
+                                origin={origin}
+                                destination={destination}
+                                apikey={GOOGLE_MAPS_APIKEY}
+                            />
+                            :
+                            null
+                        }
                         {getRestaurantMarkers}
                         {getNightClubMarkers}
                     </MapView>

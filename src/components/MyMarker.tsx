@@ -1,20 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { Callout, Marker } from "react-native-maps";
+import { PlaceModal } from "./Modals/PlaceModal";
 
-export const MyMarker = ({ item, color }: any) => {
+interface Props {
+    item: any,
+    color: string,
+    setCoordenates: (coordenates: any) => void
+}
+
+export const MyMarker = ({ item, color, setCoordenates }: Props) => {
+    const [modalVisible, setModalVisible] = useState(false);
+
     return (<Marker
         coordinate={{ latitude: item.geometry.location.lat, longitude: item.geometry.location.lng }}
         pinColor={color}
-    // icon={require('../../assets/images/marker.png')}
+        icon={item.icon}
     >
-        {/* <PlaceModal
-                            modalVisible={modalVisible}
-                            setmodalVisible={setModalVisible}
-                        /> */}
         <Callout onPress={() => {
-            // setModalVisible(true);
+            console.log('hola');
+            setModalVisible(true);
         }}>
+            <PlaceModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                item={item}
+                setCoordenates={setCoordenates}
+            />
 
             <View style={{}}>
                 <Text style={{}}>{item.name}</Text>

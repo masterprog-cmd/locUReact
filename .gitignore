@@ -5,7 +5,7 @@
 # Project files
 #
 src/api/
-
+.gitignore
 
 
 # Xcode

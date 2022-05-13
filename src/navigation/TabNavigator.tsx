@@ -7,7 +7,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FavScreen } from '../screens/TabNavigator/FavScreen';
 import { ReservasScreen } from '../screens/TabNavigator/ReservasScreen';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { googleIsSignedIn } from '../api/api';
 
 const Tab = createBottomTabNavigator();
 
