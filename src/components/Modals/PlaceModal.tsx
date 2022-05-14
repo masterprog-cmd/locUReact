@@ -1,19 +1,9 @@
-import { firebase } from "@react-native-firebase/firestore";
 import React from "react";
 import { View, Modal, TouchableOpacity, Text, Dimensions, StyleSheet, Linking, Alert } from "react-native";
 import { Button } from "react-native-paper";
-import auth from '@react-native-firebase/auth';
 
-import { getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
+import { addData, getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
 import { FABButton } from "../FABButton";
-
-
-interface Props {
-    item: any,
-    modalVisible: boolean,
-    setModalVisible: (modalVisible: boolean) => void,
-    setCoordenates: (coordenates: any) => void
-}
 
 export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates }: any) => {
 
@@ -62,7 +52,10 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                     iconName={'heart'}
                                     text={'Guardar'}
                                     onPress={() => {
-
+                                        addData(item.name, item.vicinity, item.geometry.location.lat, item.geometry.location.lng)
+                                            .then(res => {
+                                                console.log(res);
+                                            })
                                         setModalVisible(!modalVisible);
                                     }}
                                 />

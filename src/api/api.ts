@@ -152,8 +152,9 @@ export const getImagesPlaces = async (photo_reference: string, key: string) => {
 
 //Añadir datos del usuario a la base de datos
 export const addData = async (name: string, vicinity: string, lat: number, lng: number) => {
+    const userSave = firebase.firestore().collection(auth().currentUser.displayName);
 
-    await firebase.firestore().collection('Users').add({
+    await userSave.add({
         name: name,
         address: vicinity,
         latitude: lat,
@@ -162,4 +163,17 @@ export const addData = async (name: string, vicinity: string, lat: number, lng: 
         .then((res) => {
             return res;
         })
+}
+
+export const getData = async () => {
+    const userSave = firebase.firestore().collection(auth().currentUser.displayName);
+    let data: any = [];
+    await userSave.get()
+        .then((res) => {
+            res.forEach((doc) => {
+                data.push(doc.data());
+            })
+        })
+    console.log('Assas' + data);
+    return data;
 }
