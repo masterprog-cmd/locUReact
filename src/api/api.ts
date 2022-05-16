@@ -162,7 +162,7 @@ export const addData = async (name: string, vicinity: string, lat: number, lng: 
         latitude: lat,
         longitude: lng,
         business_status: business_status,
-        opening_hours: opening_hours,
+        opening_hours: opening_hours || null,
         types: types
     })
         .then((res) => {
@@ -170,6 +170,7 @@ export const addData = async (name: string, vicinity: string, lat: number, lng: 
         })
 }
 
+//Llamada a la base de datos para obtener la info de los lugares que nos gustan
 export const getData = async () => {
     let data: any = [];
     await userSave.get()
@@ -179,4 +180,14 @@ export const getData = async () => {
             })
         })
     return data;
+}
+
+//Llamada a la base de datos para eliminar los datos del lugar seleccionado añadido a FavScreen
+export const deleteData = async (name: string) => {
+    await userSave.where('name', '==', name).get()
+        .then((res) => {
+            res.forEach((doc) => {
+                doc.ref.delete();
+            })
+        })
 }

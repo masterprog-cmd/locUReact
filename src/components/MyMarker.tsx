@@ -2,23 +2,26 @@ import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { Callout, Marker } from "react-native-maps";
 import { PlaceModal } from "./Modals/PlaceModal";
-
+import Icon from 'react-native-vector-icons/Ionicons';
 interface Props {
     item: any,
     color: string,
-    setCoordenates: (coordenates: any) => void
+    setCoordenates: (coordenates: any) => void,
+    setCancelRouteModal: (cancelRouteModal: boolean) => void,
 }
 
-export const MyMarker = ({ item, color, setCoordenates }: Props) => {
+export const MyMarker = ({ item, color, setCoordenates, setCancelRouteModal }: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
+    console.log(item.name + ' ' + JSON.stringify(item.opening_hours));
+
 
     return (<Marker
         coordinate={{ latitude: item.geometry.location.lat, longitude: item.geometry.location.lng }}
         pinColor={color}
-        icon={item.icon}
+        tracksInfoWindowChanges={true}
+        style={{ borderRadius: 20 }}
     >
         <Callout onPress={() => {
-            console.log('hola');
             setModalVisible(true);
         }}>
             <PlaceModal
@@ -26,11 +29,12 @@ export const MyMarker = ({ item, color, setCoordenates }: Props) => {
                 setModalVisible={setModalVisible}
                 item={item}
                 setCoordenates={setCoordenates}
+                setCancelRouteModal={setCancelRouteModal}
             />
 
             <View style={{}}>
                 <Text style={{}}>{item.name}</Text>
-                <Text style={{}}>Abierto: {item.opening_hours ? 'Si' : 'No'}</Text>
+                <Text style={{}}>Abierto: {item.opening_hours === true ? 'Si' : 'No'}</Text>
             </View>
         </Callout>
 

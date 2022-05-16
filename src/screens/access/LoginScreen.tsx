@@ -5,8 +5,8 @@ import { TextInput } from 'react-native-gesture-handler'
 import { Divider } from 'react-native-paper';
 import Snackbar from 'react-native-snackbar';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { AuthContext } from '../../context/Context';
 
+import { AuthContext } from '../../context/Context';
 import { GoogleAccessControl, loginAccessControl } from '../../helper/AccessControl';
 
 

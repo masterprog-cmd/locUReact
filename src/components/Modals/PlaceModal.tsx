@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Modal, TouchableOpacity, Text, Dimensions, StyleSheet, Linking, Alert } from "react-native";
+import { View, Modal, Text, Dimensions, StyleSheet, Linking, Alert } from "react-native";
 import { Button } from "react-native-paper";
 
 import { addData, getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
 import { FABButton } from "../FABButton";
 
-export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates }: any) => {
+export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates, setCancelRouteModal }: any) => {
     return (
         <View style={styles.modalContainer}>
             <Modal
@@ -15,12 +15,8 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
             >
                 <View style={styles.modal}>
                     <View style={styles.modalBox}>
-                        <View style={{ flexDirection: 'column', margin: 20 }}>
-                            <View style={{ margin: 20, borderColor: 'red', borderRadius: 1 }}>
-                                <TouchableOpacity onPress={() => { setModalVisible(!modalVisible) }} style={{ flexDirection: 'row' }}>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'column', padding: 20 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <FABButton
                                     iconName={'flag'}
                                     text={'Ir'}
@@ -30,6 +26,7 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                             longitude: item.geometry.location.lng,
                                         });
                                         setModalVisible(!modalVisible);
+                                        setCancelRouteModal(true);
                                     }}
                                 />
                                 <FABButton
@@ -38,7 +35,6 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                     onPress={() => {
                                         getPhoneNumber(item.place_id, GOOGLE_MAPS_APIKEY)
                                             .then(res1 => {
-                                                console.log(res1.result);
                                                 (Object.keys(res1.result).length !== 0) ?
                                                     Linking.openURL(`tel:${res1.result.formatted_phone_number}`)
                                                     :
@@ -58,11 +54,9 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                         setModalVisible(!modalVisible);
                                     }}
                                 />
-
                             </View>
-                            <View style={{ margin: 20 }}>
-                                <Text>{item.name}</Text>
-                                <Text>{item.geometry.location.lat}</Text>
+                            <View style={{ margin: 20, alignItems: 'center' }}>
+                                <Text style={{ fontSize: 18, color: 'black' }}>{item.name}</Text>
                             </View>
                         </View>
                         <Button onPress={() => { setModalVisible(!modalVisible); }} >Cancelar</Button>
@@ -76,10 +70,10 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
 
 const styles = StyleSheet.create({
     modalContainer: {
-        bottom: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute',
+        bottom: 10, justifyContent: 'center',
     },
     modal: {
-        flex: 1, justifyContent: 'flex-end', alignItems: 'center',
+        flex: 1, justifyContent: 'flex-end'
     },
     modalBox: {
         backgroundColor: 'white',
@@ -96,5 +90,5 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
-    iconTouchabe: { borderRadius: 20, borderColor: 'blue', backgroundColor: 'red', width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }
+    // iconTouchabe: { borderRadius: 20, borderColor: 'blue', backgroundColor: 'red', width: 40, height: 40, justifyContent: 'center' }
 })

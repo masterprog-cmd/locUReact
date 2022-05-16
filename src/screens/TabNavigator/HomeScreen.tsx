@@ -10,25 +10,30 @@ import { _controlLocation } from '../../helper/Permisos';
 import { getPlaces, GOOGLE_MAPS_APIKEY } from '../../api/api';
 import { MyMarker } from '../../components/MyMarker';
 import MapViewDirections from 'react-native-maps-directions';
+import { CancelRouteModal } from '../../components/Modals/CancelRouteModal';
 
 export const HomeScreen = ({ navigation }: any) => {
     //Inicializamos latitude y longitude a 0 por si hay un fallo que nos muestre donde sea.
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
-    //Guardamos los datos de la petición de 
+    //Guardamos los datos de la petición de getPlaces donde obtenemos la info necesaria para printar los markers.
     const [places, setPlaces] = useState([]);
     const [places1, setPlaces1] = useState([]);
 
     //Obtenemos el context para utilizar la información del usuario
     const { context } = useContext(AuthContext);
+
+    //Obtenemos la posición del usuario
     const origin = { latitude, longitude };
+    //Obtenemos la posición del destino
     const [coordenates, setCoordenates] = useState({
         latitude: null,
         longitude: null
     });
     const destination = { latitude: coordenates.latitude, longitude: coordenates.longitude };
 
-
+    //useState para abrir el modal de cancelar ruta
+    const [cancelRouteModal, setCancelRouteModal] = useState(false);
 
     useEffect(() => {
         //Preguntamos si tenemos permisos para obtener la localización
@@ -42,10 +47,10 @@ export const HomeScreen = ({ navigation }: any) => {
                 setLatitude(lat);
                 setLongitude(lng);
 
+
                 getPlaces(lat, lng, 3500, 'restaurant', GOOGLE_MAPS_APIKEY)
                     .then(resp => {
                         setPlaces(resp.results);
-
                     })
                     .catch(err => {
                         console.error(err);
@@ -71,8 +76,9 @@ export const HomeScreen = ({ navigation }: any) => {
             return (<MyMarker
                 key={key}
                 item={place}
-                color='red'
+                color={place.icon_background_color}
                 setCoordenates={setCoordenates}
+                setCancelRouteModal={setCancelRouteModal}
             />)
         })) : (null);
 
@@ -81,8 +87,9 @@ export const HomeScreen = ({ navigation }: any) => {
         return (<MyMarker
             key={key}
             item={place1}
-            color='green'
+            color={'green'}
             setCoordenates={setCoordenates}
+            setCancelRouteModal={setCancelRouteModal}
         />)
     }) : null
 
@@ -110,7 +117,10 @@ export const HomeScreen = ({ navigation }: any) => {
                                 // 'details' is provided when fetchDetails = true
                                 console.log(data);
                                 console.log(details.formatted_address);
-                                console.log(details.geometry.location);
+                                setCoordenates({
+                                    latitude: details.geometry.location.lat,
+                                    longitude: details.geometry.location.lng
+                                });
                             }}
                             query={{
                                 key: GOOGLE_MAPS_APIKEY,
@@ -119,6 +129,12 @@ export const HomeScreen = ({ navigation }: any) => {
                             }}
                         />
                     </View>
+                    <CancelRouteModal
+                        cancelRouteModal={cancelRouteModal}
+                        setCancelRouteModal={setCancelRouteModal}
+                        setCoordenates={setCoordenates}
+                        navigation={navigation}
+                    />
                     <MapView
                         customMapStyle={mapStyle}
                         showsUserLocation={true}
@@ -140,16 +156,16 @@ export const HomeScreen = ({ navigation }: any) => {
 
                     >
                         {(coordenates.latitude !== null && coordenates.longitude !== null) ?
-
-                            <MapViewDirections
-                                strokeColor='blue'
-                                strokeWidth={3}
-                                origin={origin}
-                                destination={destination}
-                                apikey={GOOGLE_MAPS_APIKEY}
-                            />
-                            :
-                            null
+                            (
+                                < MapViewDirections
+                                    strokeColor='royalblue'
+                                    strokeWidth={3}
+                                    origin={origin}
+                                    destination={destination}
+                                    apikey={GOOGLE_MAPS_APIKEY}
+                                />
+                            )
+                            : null
                         }
                         {getRestaurantMarkers}
                         {getNightClubMarkers}
