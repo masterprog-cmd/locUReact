@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { firebase } from '@react-native-firebase/firestore';
 
+import { AuthContext } from '../context/Context';
+
 export const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
+export const userSave = firebase.firestore().collection(auth().currentUser.displayName);
 
 //Llamada a la API para el inicio de sesión
 export const loginUser = async (correo: string, pwd: string) => {
@@ -151,14 +154,16 @@ export const getImagesPlaces = async (photo_reference: string, key: string) => {
 }
 
 //Añadir datos del usuario a la base de datos
-export const addData = async (name: string, vicinity: string, lat: number, lng: number) => {
-    const userSave = firebase.firestore().collection(auth().currentUser.displayName);
-
+export const addData = async (name: string, vicinity: string, lat: number, lng: number, business_status: string, types: any, opening_hours?: boolean) => {
+    if (business_status === 'CLOSED_TEMPORARILY') opening_hours = null;
     await userSave.add({
         name: name,
         address: vicinity,
         latitude: lat,
         longitude: lng,
+        business_status: business_status,
+        opening_hours: opening_hours,
+        types: types
     })
         .then((res) => {
             return res;
@@ -166,7 +171,6 @@ export const addData = async (name: string, vicinity: string, lat: number, lng: 
 }
 
 export const getData = async () => {
-    const userSave = firebase.firestore().collection(auth().currentUser.displayName);
     let data: any = [];
     await userSave.get()
         .then((res) => {
@@ -174,6 +178,5 @@ export const getData = async () => {
                 data.push(doc.data());
             })
         })
-    console.log('Assas' + data);
     return data;
 }

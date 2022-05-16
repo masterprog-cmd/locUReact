@@ -6,7 +6,6 @@ import { addData, getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
 import { FABButton } from "../FABButton";
 
 export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates }: any) => {
-
     return (
         <View style={styles.modalContainer}>
             <Modal
@@ -52,7 +51,7 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                     iconName={'heart'}
                                     text={'Guardar'}
                                     onPress={() => {
-                                        addData(item.name, item.vicinity, item.geometry.location.lat, item.geometry.location.lng)
+                                        addData(item.name, item.vicinity, item.geometry.location.lat, item.geometry.location.lng, item.business_status, item.types[0], item.opening_hours)
                                             .then(res => {
                                                 console.log(res);
                                             })

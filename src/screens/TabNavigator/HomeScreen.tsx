@@ -7,7 +7,7 @@ import { AuthContext } from '../../context/Context';
 import { location } from '../../helper/MobileAccess';
 import { mapStyle } from '../../helper/mapStyle';
 import { _controlLocation } from '../../helper/Permisos';
-import { getPhoneNumber, getPlaces, GOOGLE_MAPS_APIKEY } from '../../api/api';
+import { getPlaces, GOOGLE_MAPS_APIKEY } from '../../api/api';
 import { MyMarker } from '../../components/MyMarker';
 import MapViewDirections from 'react-native-maps-directions';
 
