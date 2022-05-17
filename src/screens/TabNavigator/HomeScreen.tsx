@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Button, Dimensions, StyleSheet, Text, View } from 'react-native'
-import MapView, { Coordinate, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import { AuthContext } from '../../context/Context';
@@ -23,6 +23,8 @@ export const HomeScreen = ({ navigation }: any) => {
     const [places, setPlaces] = useState([]);
     const [places1, setPlaces1] = useState([]);
 
+    //Guardamos los datos de la petición de getPlaces donde obtenemos la info necesaria para printar los markers secundarios, es decir, del lugar que buscamos
+    //en el GooglePlacesAutocomplete.
     const [secPlaces, setSecPlaces] = useState([]);
 
 
@@ -46,7 +48,6 @@ export const HomeScreen = ({ navigation }: any) => {
     useEffect(() => {
         //Preguntamos si tenemos permisos para obtener la localización
         _controlLocation({ navigation });
-        mapRef.current;
         //Obtenemos la localización del usuario y la añadimos a los useState (arriba declarados) para mostrarla en el mapa
         location()
             .then(res => {
@@ -86,6 +87,7 @@ export const HomeScreen = ({ navigation }: any) => {
             color={place.icon_background_color}
             setCoordenates={setCoordenates}
             setCancelRoute={setCancelRoute}
+            setSecPlaces={setSecPlaces}
         />)
     })) : null;
     const getSecRestaurantMarkers = (secPlaces.length > 0) ? (secPlaces.map((place: any, key) => {
@@ -95,6 +97,7 @@ export const HomeScreen = ({ navigation }: any) => {
             color={place.icon_background_color}
             setCoordenates={setCoordenates}
             setCancelRoute={setCancelRoute}
+            setSecPlaces={setSecPlaces}
         />)
     })) : null;
 
@@ -107,6 +110,18 @@ export const HomeScreen = ({ navigation }: any) => {
             color={'green'}
             setCoordenates={setCoordenates}
             setCancelRoute={setCancelRoute}
+            setSecPlaces={setSecPlaces}
+        />)
+    }) : null;
+
+    const getSecNightClubMarkers = (places1.length > 0) ? places1.map((place1: any, key) => {
+        return (<MyMarker
+            key={key}
+            item={place1}
+            color={'green'}
+            setCoordenates={setCoordenates}
+            setCancelRoute={setCancelRoute}
+            setSecPlaces={setSecPlaces}
         />)
     }) : null;
 
@@ -207,6 +222,7 @@ export const HomeScreen = ({ navigation }: any) => {
                             {getRestaurantMarkers}
                             {getNightClubMarkers}
                             {getSecRestaurantMarkers}
+                            {getSecNightClubMarkers}
                         </MapView>
                         <View
                             style={{
@@ -225,12 +241,12 @@ export const HomeScreen = ({ navigation }: any) => {
                                         longitudeDelta: 0.01,
                                     })
                                     setSecPlaces([]);
-                                }}
+                                }
+                                }
                                 color={'black'}
                             />
                         </View>
                     </View>
-
                 </View>
                 :
                 // Mapa cargando

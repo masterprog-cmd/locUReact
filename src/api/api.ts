@@ -121,6 +121,7 @@ export const getPlaces = async (latitude: number, longitude: number, radio: numb
     return messaje;
 }
 
+//Obtenemos el número de teléfono de cada local o establecimiento
 export const getPhoneNumber = async (place_id: string, key: string) => {
     let messaje;
     await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=formatted_phone_number&key=${key}`)

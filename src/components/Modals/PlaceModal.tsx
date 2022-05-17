@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/core";
 import React from "react";
 import { View, Modal, Text, Dimensions, StyleSheet, Linking, Alert } from "react-native";
 import { Button } from "react-native-paper";
@@ -6,9 +5,7 @@ import { Button } from "react-native-paper";
 import { addData, getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
 import { FABButton } from "../FABButton";
 
-export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates, setCancelRoute }: any) => {
-    const isFocused = useIsFocused();
-
+export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates, setCancelRoute, setSecPlaces }: any) => {
     return (
         <View style={styles.modalContainer}>
             <Modal
@@ -28,7 +25,6 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                             latitude: item.geometry.location.lat,
                                             longitude: item.geometry.location.lng,
                                         });
-                                        console.log(isFocused ? 'focused' : 'unfocused');
                                         setModalVisible(!modalVisible);
                                         setCancelRoute(false);
                                     }}

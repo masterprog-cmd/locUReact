@@ -74,7 +74,7 @@ export const FavScreen = () => {
     const Item = ({ address, opening_hours, types }: any) => (
         <View style={{ borderRadius: 1.5, borderWidth: 1, borderColor: 'black', paddingVertical: 5 }}>
             <Text style={{ color: 'black' }}>Dirección: {address}</Text>
-            <Text style={{ color: 'black' }}>Estado: {(opening_hours === true) ? <Text style={{ color: 'green' }}>Abierto</Text> : <Text style={{ color: 'red' }}>Cerrado</Text>}</Text>
+            <Text style={{ color: 'black' }}>{opening_hours === true ? <Text style={{ color: 'green' }}>Abierto</Text> : opening_hours === undefined ? <Text style={{ color: 'orange' }}>Horario no definido</Text> : <Text style={{ color: 'red' }}>Cerrado</Text>}</Text>
             <Text style={{ textTransform: 'capitalize', color: 'black' }}>
                 Tipo: {(types === 'night_club') ? 'Club nocturno' : (types === 'restaurant') ? 'Restaurante' : (types === 'meal_delivery') ? 'Comida rápida' : types}
             </Text>

@@ -7,9 +7,10 @@ interface Props {
     color: string,
     setCoordenates: (coordenates: any) => void,
     setCancelRoute: (cancelRoute: boolean) => void,
+    setSecPlaces: (secPlace: any) => void,
 }
 
-export const MyMarker = ({ item, color, setCoordenates, setCancelRoute }: Props) => {
+export const MyMarker = ({ item, color, setCoordenates, setCancelRoute, setSecPlaces }: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (<Marker
@@ -27,12 +28,15 @@ export const MyMarker = ({ item, color, setCoordenates, setCancelRoute }: Props)
                 item={item}
                 setCoordenates={setCoordenates}
                 setCancelRoute={setCancelRoute}
+                setSecPlaces={setSecPlaces}
             />
 
             <View style={{}}>
                 <Text style={{}}>{item.name}</Text>
 
-                <Text style={{}}>Abierto: {item.opening_hours?.open_now === true ? 'Si' : item.opening_hours === undefined ? 'Horario no definido' : 'No'}</Text>
+                <Text style={{ color: 'black' }}>{item.opening_hours?.open_now === true ? <Text style={{ color: 'green' }}>Abierto</Text>
+                    : item.opening_hours?.open_now === undefined ?
+                        <Text style={{ color: 'orange' }}>Horario no definido</Text> : <Text style={{ color: 'red' }}>Cerrado</Text>}</Text>
 
 
             </View>
