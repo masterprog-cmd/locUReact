@@ -4,15 +4,16 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 interface Props {
     iconName: string,
-    text: string,
+    text?: string,
+    color?: string,
     onPress: () => void
 }
 
 export const FABButton = (props: Props) => {
     return (
         <View style={{ flexDirection: 'column', alignItems: 'center', paddingHorizontal: 20 }}>
-            <TouchableOpacity style={styles.iconTouchabe} onPress={props.onPress}>
-                <Icon name={props.iconName} color={'white'} size={25} />
+            <TouchableOpacity style={(props.color) ? { ...styles.iconTouchabe, backgroundColor: props.color } : styles.iconTouchabe} onPress={props.onPress}>
+                <Icon name={props.iconName} color={'white' || props.color} size={25} />
             </TouchableOpacity>
             <Text>{props.text}</Text>
         </View>

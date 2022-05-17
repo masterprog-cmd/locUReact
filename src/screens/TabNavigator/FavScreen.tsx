@@ -47,7 +47,7 @@ export const FavScreen = () => {
                     arr.push({
                         title: item.name,
                         data: [{
-                            open: item.opening_hours,
+                            open: item.opening_hours?.open_now,
                             address: item.address,
                             types: (typeof item.types === 'string') ? item.types : item.types[0],
                         }],

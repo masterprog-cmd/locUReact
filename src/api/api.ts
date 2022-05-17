@@ -108,7 +108,7 @@ export const logoutUser = async () => {
 //Pasamos como parámetros localización, tipo, radio y key para obtener los locales cercanos a la ubicación del usuario
 export const getPlaces = async (latitude: number, longitude: number, radio: number, tipo: string, key: string) => {
     let messaje;
-    await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radio}&types=${[tipo]}&key=${key}`)
+    await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&libraries=places&radius=${radio}&types=${[tipo]}&key=${key}`)
         .then(res => res.json())
         .then(res => {
             messaje = res;
@@ -128,24 +128,6 @@ export const getPhoneNumber = async (place_id: string, key: string) => {
         .then(res => {
             messaje = res;
         })
-        .catch(() => {
-            messaje = null;
-        }
-        )
-    return messaje;
-}
-
-//Obtener imagenes del local
-export const getImagesPlaces = async (photo_reference: string, key: string) => {
-    let messaje;
-    await fetch(`https://maps.googleapis.com/maps/api/place/photo
-    ?maxwidth=400
-    &photo_reference=${photo_reference}
-    &key=${key}`)
-        .then(res => {
-            messaje = res;
-        }
-        )
         .catch(() => {
             messaje = null;
         }
