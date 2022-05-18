@@ -3,10 +3,9 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { firebase } from '@react-native-firebase/firestore';
 
-import { AuthContext } from '../context/Context';
-
 export const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
-export const userSave = firebase.firestore().collection(auth().currentUser.displayName);
+export let userSave = firebase.firestore();
+userSave.enableNetwork();
 
 //Llamada a la API para el inicio de sesión
 export const loginUser = async (correo: string, pwd: string) => {
@@ -96,6 +95,7 @@ export const logoutUser = async () => {
     let messaje;
     await auth().signOut()
         .then((res) => {
+            userSave.disableNetwork();
             logoutGoogle();
             messaje = res;
         })
@@ -106,7 +106,7 @@ export const logoutUser = async () => {
 }
 
 //Pasamos como parámetros localización, tipo, radio y key para obtener los locales cercanos a la ubicación del usuario
-export const getPlaces = async (latitude: number, longitude: number, radio: number, tipo: string, key: string) => {
+export const getPlaces = async (latitude: number, longitude: number, radio: number, tipo?: string, key?: string) => {
     let messaje;
     await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&libraries=places&radius=${radio}&types=${[tipo]}&key=${key}`)
         .then(res => res.json())
@@ -135,11 +135,24 @@ export const getPhoneNumber = async (place_id: string, key: string) => {
         )
     return messaje;
 }
+export const getOneMarkerOnly = async (place_id: string, key: string) => {
+    let messaje;
+    await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=geometry&key=${key}`)
+        .then(res => res.json())
+        .then(res => {
+            messaje = res;
+        })
+        .catch(() => {
+            messaje = null;
+        }
+        )
+    return messaje;
+}
 
 //Añadir datos del usuario a la base de datos
 export const addData = async (name: string, vicinity: string, lat: number, lng: number, business_status: string, types: any, opening_hours?: boolean) => {
     if (business_status === 'CLOSED_TEMPORARILY') opening_hours = null;
-    await userSave.add({
+    await userSave.collection(`${auth().currentUser?.uid}`).add({
         name: name,
         address: vicinity,
         latitude: lat,
@@ -156,10 +169,11 @@ export const addData = async (name: string, vicinity: string, lat: number, lng: 
 //Llamada a la base de datos para obtener la info de los lugares que nos gustan
 export const getData = async () => {
     let data: any = [];
-    await userSave.get()
+    await userSave.collection(`${auth().currentUser?.uid}`).get()
         .then((res) => {
             res.forEach((doc) => {
                 data.push(doc.data());
+                // console.log(doc.data());
             })
         })
     return data;
@@ -167,7 +181,11 @@ export const getData = async () => {
 
 //Llamada a la base de datos para eliminar los datos del lugar seleccionado añadido a FavScreen
 export const deleteData = async (name: string) => {
-    await userSave.where('name', '==', name).get()
+    await userSave.collection(`${auth().currentUser?.uid!}`).where('name', '==', name).get(
+        {
+            source: 'server'
+        }
+    )
         .then((res) => {
             res.forEach((doc) => {
                 doc.ref.delete();

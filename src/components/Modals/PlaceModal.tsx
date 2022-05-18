@@ -25,6 +25,10 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                             latitude: item.geometry.location.lat,
                                             longitude: item.geometry.location.lng,
                                         });
+                                        // setSecPlaces(item);
+                                        // getOneMarkerOnly(item.place_id, GOOGLE_MAPS_APIKEY).then(res => {
+                                        //     setSecPlaces(res.result);
+                                        // })
                                         setModalVisible(!modalVisible);
                                         setCancelRoute(false);
                                     }}
@@ -47,10 +51,7 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                     iconName={'heart'}
                                     text={'Guardar'}
                                     onPress={() => {
-                                        addData(item.name, item.vicinity, item.geometry.location.lat, item.geometry.location.lng, item.business_status, item.types[0], item.opening_hours)
-                                            .then(res => {
-                                                console.log(res);
-                                            })
+                                        addData(item.name, item.vicinity, item.geometry.location.lat, item.geometry.location.lng, item.business_status, item.types[0], item.opening_hours);
                                         setModalVisible(!modalVisible);
                                     }}
                                 />

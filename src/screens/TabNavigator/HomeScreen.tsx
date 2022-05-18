@@ -12,6 +12,21 @@ import { MyMarker } from '../../components/MyMarker';
 import MapViewDirections from 'react-native-maps-directions';
 import { FABButton } from '../../components/FABButton';
 
+
+export const getPlacesDetails = async (type: string, lat?: number, lng?: number,) => {
+    let messaje;
+    await getPlaces(lat, lng, 3500, type, GOOGLE_MAPS_APIKEY)
+        .then(resp => {
+            messaje = resp;
+        })
+        .catch(() => {
+            messaje = null;
+        }
+        );
+    return messaje;
+}
+
+
 export const HomeScreen = ({ navigation }: any) => {
     //Obtenemos el context para utilizar la información del usuario
     const { context } = useContext(AuthContext);
@@ -20,12 +35,23 @@ export const HomeScreen = ({ navigation }: any) => {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     //Guardamos los datos de la petición de getPlaces donde obtenemos la info necesaria para printar los markers.
+    // const [places, setPlaces] = useState({
+    //     restaurants: [],
+    //     nightClubs: [],
+    //     restaurants2: [],
+    //     nightClubs2: [],
+    //     markerGuide: [],
+    //     // night-clubs: []
+
+    // });
     const [places, setPlaces] = useState([]);
+
     const [places1, setPlaces1] = useState([]);
 
     //Guardamos los datos de la petición de getPlaces donde obtenemos la info necesaria para printar los markers secundarios, es decir, del lugar que buscamos
     //en el GooglePlacesAutocomplete.
     const [secPlaces, setSecPlaces] = useState([]);
+    const [secPlaces1, setSecPlaces1] = useState([]);
 
 
     //Obtenemos la posición del usuario
@@ -45,9 +71,9 @@ export const HomeScreen = ({ navigation }: any) => {
     const mapRef = useRef(null);
 
     //useEffect para obtener la posición del usuario y los markers alrededor de él
+    _controlLocation({ navigation });
     useEffect(() => {
         //Preguntamos si tenemos permisos para obtener la localización
-        _controlLocation({ navigation });
         //Obtenemos la localización del usuario y la añadimos a los useState (arriba declarados) para mostrarla en el mapa
         location()
             .then(res => {
@@ -56,28 +82,22 @@ export const HomeScreen = ({ navigation }: any) => {
 
                 setLatitude(lat);
                 setLongitude(lng);
-
-                getPlaces(lat, lng, 3500, 'restaurant', GOOGLE_MAPS_APIKEY)
+                getPlacesDetails('restaurant', lat, lng)
                     .then(resp => {
                         setPlaces(resp.results);
                     })
-                    .catch(err => {
-                        console.error(err);
-                    }
-                    );
-                getPlaces(lat, lng, 3500, 'night_club', GOOGLE_MAPS_APIKEY)
+                getPlacesDetails('night_club', lat, lng)
                     .then(resp => {
                         setPlaces1(resp.results);
                     })
-                    .catch(err => {
-                        console.error(err);
-                    }
-                    );
+
             })
             .catch(err => {
                 console.error(err);
             });
     }, [coordenates]);
+
+
 
     //Obtenemos todos los markers referentes a los restaurantes
     const getRestaurantMarkers = (places.length > 0) ? (places.map((place: any, key) => {
@@ -90,6 +110,7 @@ export const HomeScreen = ({ navigation }: any) => {
             setSecPlaces={setSecPlaces}
         />)
     })) : null;
+
     const getSecRestaurantMarkers = (secPlaces.length > 0) ? (secPlaces.map((place: any, key) => {
         return (<MyMarker
             key={key}
@@ -100,7 +121,6 @@ export const HomeScreen = ({ navigation }: any) => {
             setSecPlaces={setSecPlaces}
         />)
     })) : null;
-
 
     //Obtenemos todos los markers referentes a los clubs nocturnos
     const getNightClubMarkers = (places1.length > 0) ? places1.map((place1: any, key) => {
@@ -114,27 +134,29 @@ export const HomeScreen = ({ navigation }: any) => {
         />)
     }) : null;
 
-    const getSecNightClubMarkers = (places1.length > 0) ? places1.map((place1: any, key) => {
+    const getSecNightClubMarkers = (secPlaces1.length > 0) ? secPlaces1.map((place1: any, key) => {
         return (<MyMarker
             key={key}
             item={place1}
             color={'green'}
             setCoordenates={setCoordenates}
             setCancelRoute={setCancelRoute}
-            setSecPlaces={setSecPlaces}
+            setSecPlaces={setSecPlaces1}
         />)
     }) : null;
 
     const showRute = () => {
         return ((coordenates.latitude !== null && coordenates.longitude !== null) ?
             (
-                < MapViewDirections
-                    strokeColor='black'
-                    strokeWidth={3}
-                    origin={origin}
-                    destination={destination}
-                    apikey={GOOGLE_MAPS_APIKEY}
-                />
+                <>
+                    < MapViewDirections
+                        strokeColor='black'
+                        strokeWidth={3}
+                        origin={origin}
+                        destination={destination}
+                        apikey={GOOGLE_MAPS_APIKEY}
+                    />
+                </>
             )
             : null)
     }
@@ -162,16 +184,19 @@ export const HomeScreen = ({ navigation }: any) => {
                             enableHighAccuracyLocation={true}
                             onPress={(_data, details) => {
                                 // 'details' is provided when fetchDetails = true
-                                console.log(details.geometry.location.lat)
                                 mapRef.current.animateToRegion({
                                     latitude: details.geometry.location.lat,
                                     longitude: details.geometry.location.lng,
                                     latitudeDelta: 0.01,
                                     longitudeDelta: 0.01,
                                 })
-                                getPlaces(details.geometry.location.lat, details.geometry.location.lng, 3500, 'restaurant', GOOGLE_MAPS_APIKEY)
+                                getPlacesDetails('restaurant', details.geometry.location.lat, details.geometry.location.lng)
                                     .then(resp => {
                                         setSecPlaces(resp.results);
+                                    })
+                                getPlacesDetails('night_club', details.geometry.location.lat, details.geometry.location.lng)
+                                    .then(resp => {
+                                        setSecPlaces1(resp.results);
                                     })
                             }}
                             query={{
@@ -240,9 +265,9 @@ export const HomeScreen = ({ navigation }: any) => {
                                         latitudeDelta: 0.01,
                                         longitudeDelta: 0.01,
                                     })
-                                    setSecPlaces([]);
                                 }
                                 }
+
                                 color={'black'}
                             />
                         </View>
@@ -259,6 +284,7 @@ export const HomeScreen = ({ navigation }: any) => {
         </>
     )
 }
+
 //Estilo del mapa
 const styles = StyleSheet.create({
     container: {

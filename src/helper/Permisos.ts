@@ -15,7 +15,6 @@ export const _controlLocation = async ({ navigation }: any) => {
                         && res['android.permission.ACCESS_FINE_LOCATION']
                         && res['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'denied') {
                         _controlLocation({ navigation });
-                        Linking.openSettings();
                     } else if (res['android.permission.ACCESS_BACKGROUND_LOCATION']
                         && res['android.permission.ACCESS_COARSE_LOCATION']
                         && res['android.permission.ACCESS_FINE_LOCATION'] === 'never_ask_again') {

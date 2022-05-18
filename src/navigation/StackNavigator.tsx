@@ -12,7 +12,6 @@ import { DeleteUser } from '../screens/Settings/DeleteUser';
 
 const Stack = createStackNavigator();
 
-
 export const StackNavigator = () => {
   return (
     <Stack.Navigator

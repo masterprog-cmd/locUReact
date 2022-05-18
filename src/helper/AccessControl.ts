@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 
 import { googleSignIn, loginUser, registerUser } from '../api/api';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { firebase } from '@react-native-firebase/firestore';
 
 interface Props {
     name?: string,
@@ -44,7 +45,7 @@ export const RegistrosAccessControl = async (props: Props, { navigation }: any) 
                         .then((resp) => {
                             console.log(resp);
                             Snackbar.show({
-                                text: 'Bienvenido!',
+                                text: 'Bienvenid@!',
                                 duration: Snackbar.LENGTH_SHORT,
                                 backgroundColor: 'black',
                             });
@@ -57,6 +58,7 @@ export const RegistrosAccessControl = async (props: Props, { navigation }: any) 
             });
     }
 }
+
 
 //Controlamos que las credenciales de login no esten vacias y luego iniciamos sesión si estamos registrados.
 export const loginAccessControl = async ({ correo, pwd }: Props, { setContext }: any, { navigation }: any) => {
@@ -71,6 +73,7 @@ export const loginAccessControl = async ({ correo, pwd }: Props, { setContext }:
             .then((resp) => {
                 if (resp !== null) {
                     console.log(resp);
+
                     Snackbar.show({
                         text: 'Bienvenido!',
                         backgroundColor: 'green',

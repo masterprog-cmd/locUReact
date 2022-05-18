@@ -94,7 +94,7 @@ export const FavScreen = () => {
                         <SectionList
                             showsVerticalScrollIndicator={false}
                             sections={info}
-                            keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(item, index) => item + index.toString()}
                             renderSectionHeader={({ section: { title } }) => (
                                 <View style={{ marginTop: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: 'black', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Text style={{ paddingLeft: 10, fontWeight: 'bold', fontSize: 20, color: 'white' }}>{title}</Text>
@@ -114,8 +114,8 @@ export const FavScreen = () => {
                         />
                     </SafeAreaView> :
                     <View style={{ backgroundColor: 'white', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <ActivityIndicator size={'large'} color="black" style={{ backgroundColor: 'white' }} />
-                        <Text>Cargando...</Text>
+                        <Text>No tienes sitios guardados</Text>
+
                     </View>
             }
         </>
