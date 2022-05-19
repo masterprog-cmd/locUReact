@@ -136,6 +136,8 @@ export const HomeScreen = ({ navigation }: any) => {
 
         }
     }
+
+    //Obtenemos todos los markers referentes a los clubs nocturnos secundarios
     const getSecNightClubMarkers = () => {
         if (places.secNightClubs?.length > 0 && places.markerGuide === null) {
             return (
@@ -193,7 +195,6 @@ export const HomeScreen = ({ navigation }: any) => {
                     <View>
                         <GooglePlacesAutocomplete
                             placeholder='Buscar dirección'
-                            currentLocationLabel='Mi ubicación'
                             keepResultsAfterBlur={false}
                             nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                             GooglePlacesSearchQuery={{
@@ -205,7 +206,7 @@ export const HomeScreen = ({ navigation }: any) => {
                             debounce={200}
                             enableHighAccuracyLocation={true}
                             onPress={(_data, details) => {
-                                // 'details' is provided when fetchDetails = true
+                                // 'details' is provided when fetchDetails = true 
                                 mapRef.current.animateToRegion({
                                     latitude: details.geometry.location.lat,
                                     longitude: details.geometry.location.lng,
@@ -259,14 +260,13 @@ export const HomeScreen = ({ navigation }: any) => {
                                 longitudeDelta: 0.0121,
                             }
                             }
-                            mapType="standard"
+                            mapType="satellite"
                             showsPointsOfInterest={false}
                             // showsTraffic={trafficEnabled}
                             hasTVPreferredFocus={true}
                             userLocationPriority='high'
                             userLocationUpdateInterval={2000}
                             showsMyLocationButton={false}
-                            pointerEvents="none"
                             showsCompass={true}
                             ref={mapRef}
                         >

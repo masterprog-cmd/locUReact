@@ -175,3 +175,16 @@ export const getPhoneNumber = async (place_id: string, key: string) => {
         )
     return messaje;
 }
+
+export const getPhoto = async (photo_reference: string, key: string) => {
+    let messaje;
+    await fetch(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo_reference}&key=${key}`)
+        .then(res => {
+            messaje = res;
+        })
+        .catch(() => {
+            messaje = null;
+        }
+        )
+    return messaje;
+}

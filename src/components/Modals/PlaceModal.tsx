@@ -1,13 +1,22 @@
-import React from "react";
-import { View, Modal, Text, Dimensions, StyleSheet, Linking, Alert } from "react-native";
+import React, { useState } from "react";
+import { View, Modal, Text, Dimensions, StyleSheet, Linking, Alert, ScrollView, Image } from "react-native";
 import { Button } from "react-native-paper";
+import { Rating } from "react-native-ratings";
 
-import { addData, getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
+import { addData, getPhoneNumber, getPhoto, GOOGLE_MAPS_APIKEY } from "../../api/api";
 import { FABButton } from "../FABButton";
 
 export const PlaceModal = ({ modalVisible, setModalVisible, item, setCancelRoute, places, setPlaces }: any) => {
+    const [photo, setPhoto] = useState();
+    item.photos?.map((photo: any) => {
+        getPhoto(photo.photo_reference, GOOGLE_MAPS_APIKEY)
+            .then((res: any) => {
+                setPhoto(res.url);
+            })
+    })
+
     return (
-        <View style={styles.modalContainer}>
+        <ScrollView style={styles.modalContainer}>
             <Modal
                 visible={modalVisible}
                 animationType="slide"
@@ -19,7 +28,7 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCancelRoute
             >
                 <View style={styles.modal}>
                     <View style={styles.modalBox}>
-                        <View style={{ flexDirection: 'column', padding: 20 }}>
+                        <View style={{ flexDirection: 'column', padding: 20, alignItems: 'center' }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                 <FABButton
                                     iconName={'flag'}
@@ -60,23 +69,35 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCancelRoute
                             </View>
                             <View style={{ margin: 20, alignItems: 'center' }}>
                                 <Text style={{ fontSize: 18, color: 'black' }}>{item.name}</Text>
+                                <Text>Valoración</Text>
+                                <Rating
+                                    type="star"
+                                    ratingBackgroundColor="yellow"
+                                    ratingCount={5}
+                                    imageSize={20}
+                                    readonly
+                                    startingValue={item.rating}
+                                />
+                                <Text>{item.rating}</Text>
+                                <Text style={{ marginTop: 10 }}>Total valoraciones: {item.user_ratings_total}</Text>
+                                <Image source={{ uri: photo }} style={{ height: 200, width: 300, marginTop: 10 }} />
                             </View>
                         </View>
                         <Button onPress={() => { setModalVisible(!modalVisible); }} >Cancelar</Button>
                     </View>
                 </View>
             </Modal>
-        </View >
+        </ScrollView >
     )
 };
 
 
 const styles = StyleSheet.create({
     modalContainer: {
-        bottom: 10, justifyContent: 'center',
+        bottom: 10, position: 'absolute'
     },
     modal: {
-        flex: 1, justifyContent: 'flex-end'
+        flex: 1, justifyContent: 'flex-end',
     },
     modalBox: {
         backgroundColor: 'white',

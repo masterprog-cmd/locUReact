@@ -12,12 +12,12 @@ interface Props {
 
 export const MyMarker = ({ item, color, setCancelRoute, places, setPlaces }: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
-
     return (<Marker
         coordinate={{ latitude: item.geometry.location.lat, longitude: item.geometry.location.lng }}
         pinColor={color}
         tracksInfoWindowChanges={true}
         style={{ borderRadius: 20 }}
+        icon={item.icon}
     >
         <Callout onPress={() => {
             setModalVisible(true);
