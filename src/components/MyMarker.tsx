@@ -5,12 +5,12 @@ import { PlaceModal } from "./Modals/PlaceModal";
 interface Props {
     item: any,
     color: string,
-    setCoordenates: (coordenates: any) => void,
     setCancelRoute: (cancelRoute: boolean) => void,
-    setSecPlaces: (secPlace: any) => void,
+    places: any,
+    setPlaces: (places: any) => void,
 }
 
-export const MyMarker = ({ item, color, setCoordenates, setCancelRoute, setSecPlaces }: Props) => {
+export const MyMarker = ({ item, color, setCancelRoute, places, setPlaces }: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (<Marker
@@ -26,9 +26,9 @@ export const MyMarker = ({ item, color, setCoordenates, setCancelRoute, setSecPl
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
                 item={item}
-                setCoordenates={setCoordenates}
                 setCancelRoute={setCancelRoute}
-                setSecPlaces={setSecPlaces}
+                places={places}
+                setPlaces={setPlaces}
             />
 
             <View style={{}}>

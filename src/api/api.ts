@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { firebase } from '@react-native-firebase/firestore';
@@ -105,50 +105,6 @@ export const logoutUser = async () => {
     return messaje;
 }
 
-//Pasamos como parámetros localización, tipo, radio y key para obtener los locales cercanos a la ubicación del usuario
-export const getPlaces = async (latitude: number, longitude: number, radio: number, tipo?: string, key?: string) => {
-    let messaje;
-    await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&libraries=places&radius=${radio}&types=${[tipo]}&key=${key}`)
-        .then(res => res.json())
-        .then(res => {
-            messaje = res;
-        }
-        )
-        .catch(() => {
-            messaje = null;
-        }
-        )
-    return messaje;
-}
-
-//Obtenemos el número de teléfono de cada local o establecimiento
-export const getPhoneNumber = async (place_id: string, key: string) => {
-    let messaje;
-    await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=formatted_phone_number&key=${key}`)
-        .then(res => res.json())
-        .then(res => {
-            messaje = res;
-        })
-        .catch(() => {
-            messaje = null;
-        }
-        )
-    return messaje;
-}
-export const getOneMarkerOnly = async (place_id: string, key: string) => {
-    let messaje;
-    await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=geometry&key=${key}`)
-        .then(res => res.json())
-        .then(res => {
-            messaje = res;
-        })
-        .catch(() => {
-            messaje = null;
-        }
-        )
-    return messaje;
-}
-
 //Añadir datos del usuario a la base de datos
 export const addData = async (name: string, vicinity: string, lat: number, lng: number, business_status: string, types: any, opening_hours?: boolean) => {
     if (business_status === 'CLOSED_TEMPORARILY') opening_hours = null;
@@ -181,14 +137,41 @@ export const getData = async () => {
 
 //Llamada a la base de datos para eliminar los datos del lugar seleccionado añadido a FavScreen
 export const deleteData = async (name: string) => {
-    await userSave.collection(`${auth().currentUser?.uid!}`).where('name', '==', name).get(
-        {
-            source: 'server'
-        }
-    )
+    await userSave.collection(`${auth().currentUser?.uid!}`).where('name', '==', name).get()
         .then((res) => {
             res.forEach((doc) => {
                 doc.ref.delete();
             })
         })
+}
+
+//Pasamos como parámetros localización, tipo, radio y key para obtener los locales cercanos a la ubicación del usuario
+export const getPlaces = async (latitude: number, longitude: number, radio: number, tipo?: string, key?: string) => {
+    let messaje;
+    await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&libraries=places&radius=${radio}&types=${[tipo]}&key=${key}`)
+        .then(res => res.json())
+        .then(res => {
+            messaje = res;
+        }
+        )
+        .catch(() => {
+            messaje = null;
+        }
+        )
+    return messaje;
+}
+
+//Obtenemos el número de teléfono de cada local o establecimiento
+export const getPhoneNumber = async (place_id: string, key: string) => {
+    let messaje;
+    await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=international_phone_number&key=${key}`)
+        .then(res => res.json())
+        .then(res => {
+            messaje = res;
+        })
+        .catch(() => {
+            messaje = null;
+        }
+        )
+    return messaje;
 }

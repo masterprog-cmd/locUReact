@@ -2,7 +2,7 @@ import { InitialState } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react'
 import { SectionList, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator } from 'react-native-paper';
+import { Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -72,12 +72,20 @@ export const FavScreen = () => {
     }, []);
 
     const Item = ({ address, opening_hours, types }: any) => (
-        <View style={{ borderRadius: 1.5, borderWidth: 1, borderColor: 'black', paddingVertical: 5 }}>
+        <View style={{ borderRadius: 1.5, borderWidth: 1, borderColor: 'black', paddingVertical: 5, paddingHorizontal: 5 }}>
             <Text style={{ color: 'black' }}>Dirección: {address}</Text>
-            <Text style={{ color: 'black' }}>{opening_hours === true ? <Text style={{ color: 'green' }}>Abierto</Text> : opening_hours === undefined ? <Text style={{ color: 'orange' }}>Horario no definido</Text> : <Text style={{ color: 'red' }}>Cerrado</Text>}</Text>
+            <Divider style={{ marginVertical: 5, backgroundColor: 'black' }} />
+            {
+
+                opening_hours === true ?
+                    <Text style={{ color: 'green' }}>Abierto</Text> : opening_hours === undefined ?
+                        <Text style={{ color: 'orange' }}>Horario no definido</Text> : <Text style={{ color: 'red' }}>Cerrado</Text>
+            }
+            <Divider style={{ marginVertical: 5, backgroundColor: 'black' }} />
             <Text style={{ textTransform: 'capitalize', color: 'black' }}>
                 Tipo: {(types === 'night_club') ? 'Club nocturno' : (types === 'restaurant') ? 'Restaurante' : (types === 'meal_delivery') ? 'Comida rápida' : types}
             </Text>
+
         </View>
     );
 

@@ -5,13 +5,17 @@ import { Button } from "react-native-paper";
 import { addData, getPhoneNumber, GOOGLE_MAPS_APIKEY } from "../../api/api";
 import { FABButton } from "../FABButton";
 
-export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates, setCancelRoute, setSecPlaces }: any) => {
+export const PlaceModal = ({ modalVisible, setModalVisible, item, setCancelRoute, places, setPlaces }: any) => {
     return (
         <View style={styles.modalContainer}>
             <Modal
                 visible={modalVisible}
                 animationType="slide"
                 transparent={true}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}
+                key={item.place_id}
             >
                 <View style={styles.modal}>
                     <View style={styles.modalBox}>
@@ -21,16 +25,14 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                     iconName={'flag'}
                                     text={'Ir'}
                                     onPress={() => {
-                                        setCoordenates({
-                                            latitude: item.geometry.location.lat,
-                                            longitude: item.geometry.location.lng,
-                                        });
-                                        // setSecPlaces(item);
-                                        // getOneMarkerOnly(item.place_id, GOOGLE_MAPS_APIKEY).then(res => {
-                                        //     setSecPlaces(res.result);
-                                        // })
-                                        setModalVisible(!modalVisible);
+                                        setModalVisible(false);
                                         setCancelRoute(false);
+                                        setTimeout(() => {
+                                            setPlaces({
+                                                ...places,
+                                                markerGuide: item,
+                                            });
+                                        }, 200);
                                     }}
                                 />
                                 <FABButton
@@ -40,7 +42,7 @@ export const PlaceModal = ({ modalVisible, setModalVisible, item, setCoordenates
                                         getPhoneNumber(item.place_id, GOOGLE_MAPS_APIKEY)
                                             .then(res1 => {
                                                 (Object.keys(res1.result).length !== 0) ?
-                                                    Linking.openURL(`tel:${res1.result.formatted_phone_number}`)
+                                                    Linking.openURL(`tel:${res1.result.international_phone_number}`)
                                                     :
                                                     Alert.alert('No se encontró número telefónico');
                                             })

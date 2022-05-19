@@ -1,5 +1,6 @@
 import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet, TouchableOpacityBase } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface Props {

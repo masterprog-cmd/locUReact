@@ -13,18 +13,6 @@ import MapViewDirections from 'react-native-maps-directions';
 import { FABButton } from '../../components/FABButton';
 
 
-export const getPlacesDetails = async (type: string, lat?: number, lng?: number,) => {
-    let messaje;
-    await getPlaces(lat, lng, 3500, type, GOOGLE_MAPS_APIKEY)
-        .then(resp => {
-            messaje = resp;
-        })
-        .catch(() => {
-            messaje = null;
-        }
-        );
-    return messaje;
-}
 
 
 export const HomeScreen = ({ navigation }: any) => {
@@ -35,43 +23,26 @@ export const HomeScreen = ({ navigation }: any) => {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
     //Guardamos los datos de la petición de getPlaces donde obtenemos la info necesaria para printar los markers.
-    // const [places, setPlaces] = useState({
-    //     restaurants: [],
-    //     nightClubs: [],
-    //     restaurants2: [],
-    //     nightClubs2: [],
-    //     markerGuide: [],
-    //     // night-clubs: []
+    const [places, setPlaces] = useState({
+        restaurants: [],
+        nightClubs: [],
+        secRestaurants: [],
+        secNightClubs: [],
+        markerGuide: null,
 
-    // });
-    const [places, setPlaces] = useState([]);
-
-    const [places1, setPlaces1] = useState([]);
-
-    //Guardamos los datos de la petición de getPlaces donde obtenemos la info necesaria para printar los markers secundarios, es decir, del lugar que buscamos
-    //en el GooglePlacesAutocomplete.
-    const [secPlaces, setSecPlaces] = useState([]);
-    const [secPlaces1, setSecPlaces1] = useState([]);
-
+    });
 
     //Obtenemos la posición del usuario
     const origin = { latitude, longitude };
-    //Obtenemos la posición del destino
-    const [coordenates, setCoordenates] = useState({
-        latitude: null,
-        longitude: null
-    });
-    const destination = { latitude: coordenates.latitude, longitude: coordenates.longitude };
 
-    //useState para abrir el modal de cancelar ruta
+    //useState para habilitar el botón de cancelar ruta
     const [cancelRoute, setCancelRoute] = useState(true);
 
-    //useState para mostrar el tráfico en el mapa
-    // const [trafficEnabled, setTrafficEnabled] = useState(false);
+    //useRef para volver a la ubicación del usuario o a la que se ha añadido en el GooglePlacesAutocomplete
     const mapRef = useRef(null);
 
-    //useEffect para obtener la posición del usuario y los markers alrededor de él
     _controlLocation({ navigation });
+    //useEffect para obtener la posición del usuario y los markers alrededor de él
     useEffect(() => {
         //Preguntamos si tenemos permisos para obtener la localización
         //Obtenemos la localización del usuario y la añadimos a los useState (arriba declarados) para mostrarla en el mapa
@@ -82,83 +53,134 @@ export const HomeScreen = ({ navigation }: any) => {
 
                 setLatitude(lat);
                 setLongitude(lng);
-                getPlacesDetails('restaurant', lat, lng)
-                    .then(resp => {
-                        setPlaces(resp.results);
-                    })
-                getPlacesDetails('night_club', lat, lng)
-                    .then(resp => {
-                        setPlaces1(resp.results);
-                    })
 
+                Promise.all([
+                    getPlacesDetails('restaurant', lat, lng),
+                    getPlacesDetails('night_club', lat, lng),
+                ]).then(([restaurants, nightClubs]) => {
+                    setPlaces({
+                        ...places,
+                        restaurants: restaurants.results,
+                        nightClubs: nightClubs.results,
+                    })
+                })
             })
             .catch(err => {
                 console.error(err);
             });
-    }, [coordenates]);
+    }, [places.markerGuide]);
 
-
+    const getPlacesDetails = async (type: string, lat?: number, lng?: number) => {
+        let messaje;
+        await getPlaces(lat, lng, 3500, type, GOOGLE_MAPS_APIKEY)
+            .then(resp => {
+                messaje = resp;
+            })
+            .catch(() => {
+                messaje = null;
+            }
+            );
+        return messaje;
+    }
 
     //Obtenemos todos los markers referentes a los restaurantes
-    const getRestaurantMarkers = (places.length > 0) ? (places.map((place: any, key) => {
-        return (<MyMarker
-            key={key}
-            item={place}
-            color={place.icon_background_color}
-            setCoordenates={setCoordenates}
-            setCancelRoute={setCancelRoute}
-            setSecPlaces={setSecPlaces}
-        />)
-    })) : null;
+    const getRestaurantMarkers = () => {
+        if (places.restaurants?.length > 0 && places.markerGuide === null) {
+            return (
+                places.restaurants?.map((rest: any, key) => (
+                    <MyMarker
+                        key={key}
+                        item={rest}
+                        color={rest.icon_background_color}
+                        setCancelRoute={setCancelRoute}
+                        places={places}
+                        setPlaces={setPlaces}
+                    />
+                ))
+            )
+        }
+    }
 
-    const getSecRestaurantMarkers = (secPlaces.length > 0) ? (secPlaces.map((place: any, key) => {
-        return (<MyMarker
-            key={key}
-            item={place}
-            color={place.icon_background_color}
-            setCoordenates={setCoordenates}
-            setCancelRoute={setCancelRoute}
-            setSecPlaces={setSecPlaces}
-        />)
-    })) : null;
+    const getSecRestaurantMarkers = () => {
+        if (places.secRestaurants?.length > 0 && places.markerGuide === null) {
+            return (
+                places.secRestaurants?.map((secRest: any, key) => (
+                    <MyMarker
+                        key={key}
+                        item={secRest}
+                        color={secRest.icon_background_color}
+                        setCancelRoute={setCancelRoute}
+                        places={places}
+                        setPlaces={setPlaces}
+                    />)
+                )
+            )
+        }
+    }
 
     //Obtenemos todos los markers referentes a los clubs nocturnos
-    const getNightClubMarkers = (places1.length > 0) ? places1.map((place1: any, key) => {
-        return (<MyMarker
-            key={key}
-            item={place1}
-            color={'green'}
-            setCoordenates={setCoordenates}
-            setCancelRoute={setCancelRoute}
-            setSecPlaces={setSecPlaces}
-        />)
-    }) : null;
+    const getNightClubMarkers = () => {
+        if (places.nightClubs?.length > 0 && places.markerGuide === null) {
+            return (
+                places.nightClubs?.map((club: any, key) => (
+                    <MyMarker
+                        key={key}
+                        item={club}
+                        color={'green'}
+                        setCancelRoute={setCancelRoute}
+                        places={places}
+                        setPlaces={setPlaces}
+                    />)
+                )
+            )
 
-    const getSecNightClubMarkers = (secPlaces1.length > 0) ? secPlaces1.map((place1: any, key) => {
-        return (<MyMarker
-            key={key}
-            item={place1}
-            color={'green'}
-            setCoordenates={setCoordenates}
-            setCancelRoute={setCancelRoute}
-            setSecPlaces={setSecPlaces1}
-        />)
-    }) : null;
+        }
+    }
+    const getSecNightClubMarkers = () => {
+        if (places.secNightClubs?.length > 0 && places.markerGuide === null) {
+            return (
+                places.secNightClubs?.map((secClub: any, key) => (
+                    <MyMarker
+                        key={key}
+                        item={secClub}
+                        color={'green'}
+                        setCancelRoute={setCancelRoute}
+                        places={places}
+                        setPlaces={setPlaces}
+                    />)
+                )
+            )
+        }
+    }
 
+    //Obtenemos la ruta de la posición del lugar al que el usuario quiere ir
     const showRute = () => {
-        return ((coordenates.latitude !== null && coordenates.longitude !== null) ?
-            (
+        if (places.markerGuide !== null) {
+            return (
                 <>
-                    < MapViewDirections
+                    <MyMarker
+                        key={'guide'}
+                        item={places.markerGuide}
+                        color={'#ff0000'}
+                        setCancelRoute={setCancelRoute}
+                        places={places}
+                        setPlaces={setPlaces}
+                    />
+                    <MapViewDirections
                         strokeColor='black'
                         strokeWidth={3}
                         origin={origin}
-                        destination={destination}
+                        destination={
+                            {
+                                latitude: places.markerGuide.geometry.location.lat,
+                                longitude: places.markerGuide.geometry.location.lng
+                            }
+                        }
                         apikey={GOOGLE_MAPS_APIKEY}
                     />
                 </>
             )
-            : null)
+        }
     }
 
     return (
@@ -190,14 +212,16 @@ export const HomeScreen = ({ navigation }: any) => {
                                     latitudeDelta: 0.01,
                                     longitudeDelta: 0.01,
                                 })
-                                getPlacesDetails('restaurant', details.geometry.location.lat, details.geometry.location.lng)
-                                    .then(resp => {
-                                        setSecPlaces(resp.results);
+                                Promise.all([
+                                    getPlacesDetails('restaurant', details.geometry.location.lat, details.geometry.location.lng),
+                                    getPlacesDetails('night_club', details.geometry.location.lat, details.geometry.location.lng),
+                                ]).then(([restaurants, nightClubs]) => {
+                                    setPlaces({
+                                        ...places,
+                                        secRestaurants: restaurants.results,
+                                        secNightClubs: nightClubs.results,
                                     })
-                                getPlacesDetails('night_club', details.geometry.location.lat, details.geometry.location.lng)
-                                    .then(resp => {
-                                        setSecPlaces1(resp.results);
-                                    })
+                                })
                             }}
                             query={{
                                 key: GOOGLE_MAPS_APIKEY,
@@ -206,16 +230,20 @@ export const HomeScreen = ({ navigation }: any) => {
                             }}
                         />
                     </View>
-                    <Button
-                        title='Cancelar ruta'
-                        disabled={cancelRoute}
-                        onPress={() => {
-                            coordenates.latitude = null;
-                            coordenates.longitude = null;
-                            setCancelRoute(!cancelRoute)
-                        }}
-                        color={'black'}
-                    />
+                    {!cancelRoute && (
+                        <Button
+                            title='Cancelar ruta'
+                            onPress={() => {
+                                setPlaces({
+                                    ...places,
+                                    markerGuide: null,
+                                })
+                                setCancelRoute(!cancelRoute)
+                            }}
+                            color={'black'}
+                        />
+                    )}
+
                     <View style={{ position: 'relative' }}>
                         <MapView
                             customMapStyle={mapStyle}
@@ -244,10 +272,11 @@ export const HomeScreen = ({ navigation }: any) => {
                         >
 
                             {showRute()}
-                            {getRestaurantMarkers}
-                            {getNightClubMarkers}
-                            {getSecRestaurantMarkers}
-                            {getSecNightClubMarkers}
+                            {getRestaurantMarkers()}
+                            {getNightClubMarkers()}
+                            {getSecRestaurantMarkers()}
+                            {getSecNightClubMarkers()}
+                            {/* {getGuideMarker()} */}
                         </MapView>
                         <View
                             style={{
@@ -264,6 +293,11 @@ export const HomeScreen = ({ navigation }: any) => {
                                         longitude,
                                         latitudeDelta: 0.01,
                                         longitudeDelta: 0.01,
+                                    })
+                                    setPlaces({
+                                        ...places,
+                                        secRestaurants: [],
+                                        secNightClubs: [],
                                     })
                                 }
                                 }
@@ -284,6 +318,7 @@ export const HomeScreen = ({ navigation }: any) => {
         </>
     )
 }
+
 
 //Estilo del mapa
 const styles = StyleSheet.create({
