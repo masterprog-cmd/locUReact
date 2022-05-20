@@ -26,7 +26,6 @@ export const registerUser = async (correo: string, pwd: string) => {
     let messaje: string | any;
     await auth().createUserWithEmailAndPassword(correo, pwd)
         .then(async (res) => {
-            console.log(res);
             messaje = res;
         })
         .catch(error => {
@@ -129,7 +128,6 @@ export const getData = async () => {
         .then((res) => {
             res.forEach((doc) => {
                 data.push(doc.data());
-                // console.log(doc.data());
             })
         })
     return data;

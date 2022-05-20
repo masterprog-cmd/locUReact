@@ -239,7 +239,7 @@ export const HomeScreen = ({ navigation }: any) => {
                                     ...places,
                                     markerGuide: null,
                                 })
-                                setCancelRoute(!cancelRoute)
+                                setCancelRoute(!cancelRoute);
                             }}
                             color={'black'}
                         />

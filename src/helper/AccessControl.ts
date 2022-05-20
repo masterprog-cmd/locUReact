@@ -43,7 +43,6 @@ export const RegistrosAccessControl = async (props: Props, { navigation }: any) 
                         displayName: `${props.name} ${props.lastName}`,
                     })
                         .then((resp) => {
-                            console.log(resp);
                             Snackbar.show({
                                 text: 'Bienvenid@!',
                                 duration: Snackbar.LENGTH_SHORT,
@@ -72,8 +71,6 @@ export const loginAccessControl = async ({ correo, pwd }: Props, { setContext }:
         await loginUser(correo, pwd)
             .then((resp) => {
                 if (resp !== null) {
-                    console.log(resp);
-
                     Snackbar.show({
                         text: 'Bienvenido!',
                         backgroundColor: 'green',

@@ -40,7 +40,6 @@ export const LoginScreen = ({ navigation }: any) => {
                                         ...context,
                                         user: user,
                                     });
-                                    console.log(user);
                                     navigation.navigate('Tab navigator');
 
                                 }
