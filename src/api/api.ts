@@ -3,7 +3,7 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { firebase } from '@react-native-firebase/firestore';
 
-export const GOOGLE_MAPS_APIKEY = 'AIzaSyAAfgLL5rdc8kvEzSAzUXV1AH7pX-rt_zw';
+export const GOOGLE_MAPS_APIKEY = 'YOUR_API_KEY';
 export let userSave = firebase.firestore();
 userSave.enableNetwork();
 
