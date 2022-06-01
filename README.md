@@ -1,4 +1,4 @@
-# locUReact **Made by masterprog-cmd (Xavier Abad Gómez)**
+# locUReact (**Made by [masterprog-cmd](https://github.com/masterprog-cmd) (Xavier Abad Gómez)**)
 This application has been created to complement the FCT although it can be used for commercial purposes, at the moment it is only an MVP.
 
 
