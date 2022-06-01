@@ -1,4 +1,4 @@
-# locUReact
+# locUReact **Made by masterprog-cmd (Xavier Abad Gómez)**
 This application has been created to complement the FCT although it can be used for commercial purposes, at the moment it is only an MVP.
 
 
@@ -44,4 +44,4 @@ The application downloaded previously with the QR code is not made with the code
 4. React Native
 
 
-**Made by masterprog-cmd (Xavier Abad Gómez)**
+
