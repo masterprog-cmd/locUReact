@@ -12,6 +12,14 @@ This application is intended to solve problems when making plans with friends qu
   2. Open app, login and enjoy!
 
 
+## Used Tools
+1. VSCode
+2. Firebase
+3. Google Cloud Platform
+4. React Native  
+
+
+
 ### App warning🚧
 The application downloaded previously with the QR code is not made with the code of the repository, but some Open Source APIs have been used since there are monetary costs when using the APIs of this project (Google)
 
@@ -37,11 +45,7 @@ The application downloaded previously with the QR code is not made with the code
 
 ![Settings screen](https://i.imgur.com/ZF99qGc.png)
 
-## Used Tools
-1. VSCode
-2. Firebase
-3. Google Cloud Platform
-4. React Native
+
 
 
 
