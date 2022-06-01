@@ -7,9 +7,8 @@ This application is intended to solve problems when making plans with friends qu
 
 ## Download
 1. Scan QR Code and download .apk file.
-![Image text](qrfy.mobi/p/0Peu5Tl)
-
+![QR Code Image](https://drive.google.com/file/d/1yPkY6r3wk7BXEy9EjPD0m9fKohtfGn8i/view?usp=sharing)
 2.Open app, login and enjoy!
 
-###App warning🚧
+##App warning🚧
 The application downloaded previously with the QR code is not made with the code of the repository, but some Open Source APIs have been used since there are monetary costs when using the APIs of this project (Google)
